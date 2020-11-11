@@ -1,5 +1,5 @@
 # DropVM
-A Virtual Mashine to run specific bytecode
+A Virtual Mashine to run it´s own bytecode
 
 # How to use
 To use you need to use Linux and have gcc and gMake installed.
