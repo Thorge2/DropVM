@@ -2,7 +2,7 @@
 #include "include/codes.h"
 #include "include/runtime.h"
 
-parser_T* init_parser(char* code, size_t size)
+parser_T* init_parser(unsigned char* code, size_t size)
 {
     parser_T* parser = calloc(1, sizeof(struct PARSER_STRUCT));
     parser->code = code;

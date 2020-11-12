@@ -5,10 +5,10 @@
 
 typedef struct TEMPLATE_STRUCT
 {
-    char* code;
+    unsigned char* code;
     u_int64_t id;
 } template_T;
 
-template_T* init_template(char* code, u_int64_t id);
+template_T* init_template(unsigned char* code, u_int64_t id);
 
 #endif

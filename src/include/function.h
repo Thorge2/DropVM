@@ -3,6 +3,7 @@
 
 #include "stack.h"
 #include "template.h"
+#include "runtime.h"
 
 typedef struct FUNCTION_STRUCT
 {
@@ -12,5 +13,7 @@ typedef struct FUNCTION_STRUCT
 } function_T;
 
 function_T* init_function(template_T* template, stack_T* parent);
+
+void function_run(function_T* function, runtime_T* runtime);
 
 #endif
