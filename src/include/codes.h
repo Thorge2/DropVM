@@ -16,6 +16,11 @@ enum
     LOAD,
     MOVE,
 
+    ADD,
+    SUB,
+    MULT,
+    DIV,
+
     CALL,
     RETURN
 };

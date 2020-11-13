@@ -61,6 +61,38 @@ void function_run(function_T* function, runtime_T* runtime)
                 function->counter++;
                 break;
             }
+            case ADD:
+            {
+                unsigned char a = stack_pop(runtime->function_stack);
+                unsigned char b = stack_pop(runtime->function_stack);
+                stack_push(runtime->function_stack, a + b);
+                function->counter++;
+                break;
+            }
+            case SUB:
+            {
+                unsigned char a = stack_pop(runtime->function_stack);
+                unsigned char b = stack_pop(runtime->function_stack);
+                stack_push(runtime->function_stack, a - b);
+                function->counter++;
+                break;
+            }
+            case MULT:
+            {
+                unsigned char a = stack_pop(runtime->function_stack);
+                unsigned char b = stack_pop(runtime->function_stack);
+                stack_push(runtime->function_stack, a * b);
+                function->counter++;
+                break;
+            }
+            case DIV:
+            {
+                unsigned char a = stack_pop(runtime->function_stack);
+                unsigned char b = stack_pop(runtime->function_stack);
+                stack_push(runtime->function_stack, a / b);
+                function->counter++;
+                break;
+            }
             case CALL:
             {
                 function->counter++;

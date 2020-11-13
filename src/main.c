@@ -6,14 +6,11 @@
 int main()
 {
     unsigned char src[30] = {
-        FUNC, // declares a function 0
-        MOVE, 1, 0, // moves 0 into adress 1 
-        CALL, 1, // calls function 1
-        LOAD, 1, // loads value from index 1 onto the stack
-        END, // defines the end of function 0
-        FUNC, // declares function 1
-        MOVE, 1, 2, // moves value 2 into adress 1
-        END, // declares end of function 1
+        FUNC, // declared function 0
+        PUSH, 2, // pushes 2 onto the function stack
+        PUSH, 4, // pushen 4 onto the function stack
+        ADD, // adds the last two numbers on the function stack
+        END, // return the value ontop of the function stack
     };
 
     parser_T* parser = init_parser(src, sizeof(src));
