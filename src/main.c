@@ -5,14 +5,15 @@
 
 int main()
 {
-    char src[20] = {
-        FUNC,
-        CALL, 1,
-        END,
-        FUNC,
-        PUSH, 69,
-        HALT,
-        END
+    unsigned char src[30] = {
+        FUNC, // declares a function 0
+        MOVE, 1, 0, // moves 0 into adress 1 
+        CALL, 1, // calls function 1
+        LOAD, 1, // loads value from index 1 onto the stack
+        END, // defines the end of function 0
+        FUNC, // declares function 1
+        MOVE, 1, 2, // moves value 2 into adress 1
+        END, // declares end of function 1
     };
 
     parser_T* parser = init_parser(src, sizeof(src));

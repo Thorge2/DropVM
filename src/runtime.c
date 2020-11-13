@@ -1,5 +1,6 @@
 #include "include/runtime.h"
 #include "include/function.h"
+#include <stdio.h>
 
 runtime_T* init_runtime()
 {
@@ -8,8 +9,8 @@ runtime_T* init_runtime()
     runtime->templates = 0;
     runtime->running = false;
 
-    runtime->stack = init_stack(1024);
-    runtime->heap = init_stack(1024);
+    runtime->function_stack = init_stack(1024);
+    runtime->data_stack = init_stack(1024);
 
     return runtime;
 }
@@ -30,5 +31,11 @@ int runtime_run(runtime_T* runtime)
     runtime->running = true;
     function_T* main = init_function(runtime->templates[0]);
     function_run(main, runtime);
-    return stack_pop(runtime->stack);
+
+    if (runtime->function_stack->ptr == 0)
+    {
+        printf("[Warning] No return value specified. Returning 0\n");
+        return 0;
+    }
+    return stack_pop(runtime->function_stack);
 }

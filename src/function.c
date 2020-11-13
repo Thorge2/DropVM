@@ -14,7 +14,7 @@ function_T* init_function(template_T* template)
 
 void function_run(function_T* function, runtime_T* runtime)
 {
-    while (function->template->code[function->counter] != FUNC && function->template->code[function->counter] != RETURN && runtime->running)
+    while (function->template->code[function->counter] != END && function->template->code[function->counter] != RETURN && runtime->running)
     {
         switch (function->template->code[function->counter])
         {
@@ -31,7 +31,33 @@ void function_run(function_T* function, runtime_T* runtime)
             case PUSH:
             {
                 function->counter++;
-                stack_push(runtime->stack, function->template->code[function->counter]);
+                stack_push(runtime->function_stack, function->template->code[function->counter]);
+                function->counter++;
+                break;
+            }
+            case POP:
+            {
+                function->counter++;
+                unsigned char data = stack_pop(runtime->function_stack);
+                stack_set_value(runtime->data_stack, function->template->code[function->counter], data);
+                function->counter++;
+                break;
+            }
+            case LOAD:
+            {
+                function->counter++;
+                unsigned char data = stack_get_value(runtime->data_stack, function->template->code[function->counter]);
+                stack_push(runtime->function_stack, data);
+                function->counter++;
+                break;
+            }
+            case MOVE:
+            {
+                function->counter++;
+                u_int64_t ptr =function->template->code[function->counter];
+                function->counter++;
+                unsigned char data = function->template->code[function->counter];
+                stack_set_value(runtime->data_stack, ptr, data);
                 function->counter++;
                 break;
             }
@@ -44,7 +70,14 @@ void function_run(function_T* function, runtime_T* runtime)
                     exit(1);
                 }
                 function_T* func = init_function(runtime->templates[function->template->code[function->counter]]);
+
+                u_int64_t stack_frame = runtime->data_stack->base_ptr;
+                stack_set_frame(runtime->data_stack, runtime->data_stack->base_ptr + 1);
+
                 function_run(func, runtime);
+
+                stack_set_frame(runtime->data_stack, stack_frame);
+
                 function->counter++;
                 break;
             }

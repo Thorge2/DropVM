@@ -12,6 +12,9 @@ enum
     END,
 
     PUSH,
+    POP,
+    LOAD,
+    MOVE,
 
     CALL,
     RETURN

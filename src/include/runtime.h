@@ -12,8 +12,8 @@ typedef struct RUNTIME_STRUCT
     u_int64_t template_count;
     bool running;
 
-    stack_T* stack;
-    stack_T* heap;
+    stack_T* function_stack;
+    stack_T* data_stack;
 } runtime_T;
 
 runtime_T* init_runtime();
