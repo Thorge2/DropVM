@@ -1,6 +1,7 @@
 #include "include/parser.h"
 #include "include/codes.h"
 #include "include/runtime.h"
+#include <stdio.h>
 
 parser_T* init_parser(unsigned char* code, size_t size)
 {
@@ -15,11 +16,15 @@ parser_T* init_parser(unsigned char* code, size_t size)
 runtime_T* parser_parse(parser_T* parser)
 {
     unsigned int counter = 0;
-    while (counter != parser->size)
+    while (counter < parser->size)
     {
         if (parser->code[counter] == FUNC)
         {
             parser_create_template(parser, ++counter);
+            while (parser->code[counter] != END)
+            {
+                counter++;
+            }
         }
         counter++;
     }

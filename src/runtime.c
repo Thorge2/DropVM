@@ -8,6 +8,9 @@ runtime_T* init_runtime()
     runtime->templates = 0;
     runtime->running = false;
 
+    runtime->stack = init_stack(1024);
+    runtime->heap = init_stack(1024);
+
     return runtime;
 }
 
@@ -25,7 +28,7 @@ void runtime_push_template(runtime_T* runtime, template_T* template)
 int runtime_run(runtime_T* runtime)
 {
     runtime->running = true;
-    function_T* main = init_function(runtime->templates[0], 0);
+    function_T* main = init_function(runtime->templates[0]);
     function_run(main, runtime);
-    return stack_pop(main->stack);
+    return stack_pop(runtime->stack);
 }

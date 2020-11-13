@@ -7,12 +7,11 @@
 
 typedef struct FUNCTION_STRUCT
 {
-    stack_T* stack;
     u_int64_t counter;
     template_T* template;
 } function_T;
 
-function_T* init_function(template_T* template, stack_T* parent);
+function_T* init_function(template_T* template);
 
 void function_run(function_T* function, runtime_T* runtime);
 

@@ -9,8 +9,12 @@ enum
     HALT,
 
     FUNC,
+    END,
 
     PUSH,
+
+    CALL,
+    RETURN
 };
 
 #endif
