@@ -6,9 +6,9 @@
 typedef struct TEMPLATE_STRUCT
 {
     unsigned char* code;
-    u_int64_t id;
+    u_int32_t id;
 } template_T;
 
-template_T* init_template(unsigned char* code, u_int64_t id);
+template_T* init_template(unsigned char* code, u_int32_t id);
 
 #endif

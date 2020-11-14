@@ -30,45 +30,45 @@ void stack_push(stack_T* stack, char data)
 unsigned char stack_pop(stack_T* stack)
 {
     stack->ptr--;
-    u_int64_t index = stack->base_ptr + stack->ptr;
+    u_int32_t index = stack->base_ptr + stack->ptr;
     if (index < 0)
     {
-        printf("[Stack pop] stack limits exceeded: %ld\n", index);
+        printf("[Stack pop] stack limits exceeded: %d\n", index);
         exit(1);
     }
 
     return stack->data[index];
 }
 
-void stack_set_value(stack_T* stack, u_int64_t ptr, unsigned char data)
+void stack_set_value(stack_T* stack, u_int32_t ptr, unsigned char data)
 {
-    u_int64_t index = stack->base_ptr + ptr;
+    u_int32_t index = stack->base_ptr + ptr;
     if (index < 0 || index > stack->size)
     {
-        printf("[Stack set] stack limits exceeded: %ld\n", index);
+        printf("[Stack set] stack limits exceeded: %d\n", index);
         exit(1);
     }
 
     stack->data[index]= data;
 }
 
-unsigned char stack_get_value(stack_T* stack, u_int64_t ptr)
+unsigned char stack_get_value(stack_T* stack, u_int32_t ptr)
 {
-    u_int64_t index = stack->base_ptr + ptr;
+    u_int32_t index = stack->base_ptr + ptr;
     if (index < 0 || index > stack->size)
     {
-        printf("[Stack set] stack limits exceeded: %ld\n", index);
+        printf("[Stack set] stack limits exceeded: %d\n", index);
         exit(1);
     }
 
     return stack->data[index];
 }
 
-void stack_set_frame(stack_T* stack, u_int64_t ptr)
+void stack_set_frame(stack_T* stack, u_int32_t ptr)
 {
     if (ptr < 0 || ptr > stack->size)
     {
-        printf("[Stack frame] out of range: %ld\n", ptr);
+        printf("[Stack frame] out of range: %d\n", ptr);
         exit(1);
     }
 

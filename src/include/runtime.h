@@ -9,7 +9,7 @@
 typedef struct RUNTIME_STRUCT
 {
     template_T** templates;
-    u_int64_t template_count;
+    u_int32_t template_count;
     bool running;
 
     stack_T* function_stack;

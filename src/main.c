@@ -6,11 +6,10 @@
 int main()
 {
     unsigned char src[30] = {
-        FUNC, // declared function 0
-        PUSH, 2, // pushes 2 onto the function stack
-        PUSH, 4, // pushen 4 onto the function stack
-        ADD, // adds the last two numbers on the function stack
-        END, // return the value ontop of the function stack
+        FUNC,
+        MOVE16, 0,0,0,0, 4,2,
+        LOAD16, 0,0,0,0,
+        END
     };
 
     parser_T* parser = init_parser(src, sizeof(src));
