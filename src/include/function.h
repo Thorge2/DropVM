@@ -23,4 +23,9 @@ void function_pop(function_T* function, runtime_T* runtime, unsigned char num_by
 void function_load(function_T* function, runtime_T* runtime, unsigned char num_bytes);
 void function_move(function_T* funtion, runtime_T* runtime, unsigned char num_bytes);
 
+void function_add(function_T* function, runtime_T* runtime, unsigned char num_bytes);
+void function_sub(function_T* function, runtime_T* runtime, unsigned char num_bytes);
+void function_mult(function_T* function, runtime_T* runtime, unsigned char num_bytes);
+void function_div(function_T* function, runtime_T* runtime, unsigned char num_bytes);
+
 #endif

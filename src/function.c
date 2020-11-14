@@ -126,33 +126,97 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case ADD:
             {
-                unsigned char a = stack_pop(runtime->function_stack);
-                unsigned char b = stack_pop(runtime->function_stack);
-                stack_push(runtime->function_stack, a + b);
+                function_add(function, runtime, 1);
+                function->counter++;
+                break;
+            }
+            case ADD16:
+            {
+                function_add(function, runtime, 2);
+                function->counter++;
+                break;
+            }
+            case ADD32:
+            {
+                function_add(function, runtime, 4);
+                function->counter++;
+                break;
+            }
+            case ADD64:
+            {
+                function_add(function, runtime, 8);
                 function->counter++;
                 break;
             }
             case SUB:
             {
-                unsigned char a = stack_pop(runtime->function_stack);
-                unsigned char b = stack_pop(runtime->function_stack);
-                stack_push(runtime->function_stack, a - b);
+                function_sub(function, runtime, 1);
+                function->counter++;
+                break;
+            }
+            case SUB16:
+            {
+                function_sub(function, runtime, 2);
+                function->counter++;
+                break;
+            }
+            case SUB32:
+            {
+                function_sub(function, runtime, 4);
+                function->counter++;
+                break;
+            }
+            case SUB64:
+            {
+                function_sub(function, runtime, 8);
                 function->counter++;
                 break;
             }
             case MULT:
             {
-                unsigned char a = stack_pop(runtime->function_stack);
-                unsigned char b = stack_pop(runtime->function_stack);
-                stack_push(runtime->function_stack, a * b);
+                function_mult(function, runtime, 1);
+                function->counter++;
+                break;
+            }
+            case MULT16:
+            {
+                function_mult(function, runtime, 2);
+                function->counter++;
+                break;
+            }
+            case MULT32:
+            {
+                function_mult(function, runtime, 4);
+                function->counter++;
+                break;
+            }
+            case MULT64:
+            {
+                function_mult(function, runtime, 8);
                 function->counter++;
                 break;
             }
             case DIV:
             {
-                unsigned char a = stack_pop(runtime->function_stack);
-                unsigned char b = stack_pop(runtime->function_stack);
-                stack_push(runtime->function_stack, a / b);
+                function_div(function, runtime, 1);
+                function->counter++;
+                break;
+            }
+            case DIV16:
+            {
+                function_div(function, runtime, 2);
+                function->counter++;
+                break;
+            }
+            case DIV32:
+            {
+                function_div(function, runtime, 4);
+                function->counter++;
+                break;
+            }
+            case DIV64:
+            {
+                function_div(function, runtime, 8);
                 function->counter++;
                 break;
             }
@@ -240,5 +304,89 @@ inline void function_move(function_T* funtion, runtime_T* runtime, unsigned char
     {
         funtion->counter++;
         stack_set_value(runtime->data_stack, i, function_get_current(funtion));
+    }
+}
+
+inline void function_add(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+{
+    u_int64_t a = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        a |= stack_pop(runtime->function_stack) << i * 8;
+    }
+
+    u_int64_t b = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        b |= stack_pop(runtime->function_stack) << i * 8;
+    }
+    
+    u_int64_t data = a + b;
+    for (int i = num_bytes - 1; i > -1; i--)
+    {
+        stack_push(runtime->function_stack, (data >> (8*i)) & 0xff);
+    }
+}
+
+inline void function_sub(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+{
+    u_int64_t a = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        a |= stack_pop(runtime->function_stack) << i * 8;
+    }
+
+    u_int64_t b = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        b |= stack_pop(runtime->function_stack) << i * 8;
+    }
+    
+    u_int64_t data = a - b;
+    for (int i = num_bytes - 1; i > -1; i--)
+    {
+        stack_push(runtime->function_stack, (data >> (8*i)) & 0xff);
+    }
+}
+
+inline void function_mult(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+{
+    u_int64_t a = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        a |= stack_pop(runtime->function_stack) << i * 8;
+    }
+
+    u_int64_t b = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        b |= stack_pop(runtime->function_stack) << i * 8;
+    }
+    
+    u_int64_t data = a * b;
+    for (int i = num_bytes - 1; i > -1; i--)
+    {
+        stack_push(runtime->function_stack, (data >> (8*i)) & 0xff);
+    }
+}
+
+inline void function_div(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+{
+    u_int64_t a = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        a |= stack_pop(runtime->function_stack) << i * 8;
+    }
+
+    u_int64_t b = 0;
+    for (int i = 0; i < num_bytes; i++)
+    {
+        b |= stack_pop(runtime->function_stack) << i * 8;
+    }
+    
+    u_int64_t data = a / b;
+    for (int i = num_bytes - 1; i > -1; i--)
+    {
+        stack_push(runtime->function_stack, (data >> (8*i)) & 0xff);
     }
 }

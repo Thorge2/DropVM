@@ -7,8 +7,8 @@ int main()
 {
     unsigned char src[30] = {
         FUNC,
-        MOVE16, 0,0,0,0, 4,2,
-        LOAD16, 0,0,0,0,
+        PUSH16, 1,2,
+        ADD,
         END
     };
 
