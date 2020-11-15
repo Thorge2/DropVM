@@ -124,6 +124,54 @@ void function_run(function_T* function, runtime_T* runtime)
                 function->counter++;
                 break;
             }
+            case POPS:
+            {
+                function_pops(runtime, 1);
+                function->counter++;
+                break;
+            }
+            case POPS16:
+            {
+                function_pops(runtime, 2);
+                function->counter++;
+                break;
+            }
+            case POPS32:
+            {
+                function_pops(runtime, 4);
+                function->counter++;
+                break;
+            }
+            case POPS64:
+            {
+                function_pops(runtime, 8);
+                function->counter++;
+                break;
+            }
+            case LOADS:
+            {
+                function_loads(runtime, 1);
+                function->counter++;
+                break;
+            }
+            case LOADS16:
+            {
+                function_loads(runtime, 2);
+                function->counter++;
+                break;
+            }
+            case LOADS32:
+            {
+                function_loads(runtime, 4);
+                function->counter++;
+                break;
+            }
+            case LOADS64:
+            {
+                function_loads(runtime, 8);
+                function->counter++;
+                break;
+            }
             case CREATE_DSTACK:
             {
                 runtime->data_stacks_ptr += 1;
@@ -151,97 +199,97 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case ADD:
             {
-                function_add(function, runtime, 1);
+                function_add(runtime, 1);
                 function->counter++;
                 break;
             }
             case ADD16:
             {
-                function_add(function, runtime, 2);
+                function_add(runtime, 2);
                 function->counter++;
                 break;
             }
             case ADD32:
             {
-                function_add(function, runtime, 4);
+                function_add(runtime, 4);
                 function->counter++;
                 break;
             }
             case ADD64:
             {
-                function_add(function, runtime, 8);
+                function_add(runtime, 8);
                 function->counter++;
                 break;
             }
             case SUB:
             {
-                function_sub(function, runtime, 1);
+                function_sub(runtime, 1);
                 function->counter++;
                 break;
             }
             case SUB16:
             {
-                function_sub(function, runtime, 2);
+                function_sub(runtime, 2);
                 function->counter++;
                 break;
             }
             case SUB32:
             {
-                function_sub(function, runtime, 4);
+                function_sub(runtime, 4);
                 function->counter++;
                 break;
             }
             case SUB64:
             {
-                function_sub(function, runtime, 8);
+                function_sub(runtime, 8);
                 function->counter++;
                 break;
             }
             case MULT:
             {
-                function_mult(function, runtime, 1);
+                function_mult(runtime, 1);
                 function->counter++;
                 break;
             }
             case MULT16:
             {
-                function_mult(function, runtime, 2);
+                function_mult(runtime, 2);
                 function->counter++;
                 break;
             }
             case MULT32:
             {
-                function_mult(function, runtime, 4);
+                function_mult(runtime, 4);
                 function->counter++;
                 break;
             }
             case MULT64:
             {
-                function_mult(function, runtime, 8);
+                function_mult(runtime, 8);
                 function->counter++;
                 break;
             }
             case DIV:
             {
-                function_div(function, runtime, 1);
+                function_div(runtime, 1);
                 function->counter++;
                 break;
             }
             case DIV16:
             {
-                function_div(function, runtime, 2);
+                function_div(runtime, 2);
                 function->counter++;
                 break;
             }
             case DIV32:
             {
-                function_div(function, runtime, 4);
+                function_div(runtime, 4);
                 function->counter++;
                 break;
             }
             case DIV64:
             {
-                function_div(function, runtime, 8);
+                function_div(runtime, 8);
                 function->counter++;
                 break;
             }
@@ -268,8 +316,8 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case IFE:
             {
-                u_int32_t a = function_get_adress_stack(function, runtime);
-                u_int32_t b = function_get_adress_stack(function, runtime);
+                u_int32_t a = function_get_adress_stack(runtime);
+                u_int32_t b = function_get_adress_stack(runtime);
 
                 u_int32_t adress = function_get_adress(function);
 
@@ -283,8 +331,8 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case IFNE:
             {
-                u_int32_t a = function_get_adress_stack(function, runtime);
-                u_int32_t b = function_get_adress_stack(function, runtime);
+                u_int32_t a = function_get_adress_stack(runtime);
+                u_int32_t b = function_get_adress_stack(runtime);
 
                 u_int32_t adress = function_get_adress(function);
 
@@ -298,8 +346,8 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case IFGT:
             {
-                u_int32_t a = function_get_adress_stack(function, runtime);
-                u_int32_t b = function_get_adress_stack(function, runtime);
+                u_int32_t a = function_get_adress_stack(runtime);
+                u_int32_t b = function_get_adress_stack(runtime);
 
                 u_int32_t adress = function_get_adress(function);
 
@@ -313,8 +361,8 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case IFLT:
             {
-                u_int32_t a = function_get_adress_stack(function, runtime);
-                u_int32_t b = function_get_adress_stack(function, runtime);
+                u_int32_t a = function_get_adress_stack(runtime);
+                u_int32_t b = function_get_adress_stack(runtime);
 
                 u_int32_t adress = function_get_adress(function);
 
@@ -328,8 +376,8 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case PRINT:
             {
-                u_int32_t memory_adress = function_get_adress_stack(function, runtime);
-                u_int32_t stack_adress = function_get_adress_stack(function, runtime);
+                u_int32_t memory_adress = function_get_adress_stack(runtime);
+                u_int32_t stack_adress = function_get_adress_stack(runtime);
                 if (stack_adress > runtime->data_stacks_ptr)
                 {
                     printf("[Print] Cannot access data stack: %d\n", stack_adress);
@@ -368,7 +416,7 @@ u_int32_t function_get_adress(function_T* function)
     return adress;
 }
 
-u_int32_t function_get_adress_stack(function_T* function, runtime_T* runtime)
+u_int32_t function_get_adress_stack(runtime_T* runtime)
 {
     u_int32_t adress = 0;
     for (int i = 0; i < 4; i++)
@@ -441,7 +489,43 @@ inline void function_move(function_T* function, runtime_T* runtime, unsigned cha
     }
 }
 
-inline void function_add(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+inline void function_pops(runtime_T* runtime, unsigned char num_bytes)
+{
+    u_int32_t memory_adress = function_get_adress_stack(runtime);
+
+    u_int32_t stack_adress = function_get_adress_stack(runtime);
+    if (stack_adress > runtime->data_stacks_ptr)
+    {
+        printf("[Pop] Cannot access data stack: %d\n", stack_adress);
+        exit(1);
+    }
+
+    for (int i = memory_adress; i < num_bytes + memory_adress; i++)
+    {
+        unsigned char data = stack_pop(runtime->function_stack);
+        stack_set_value(runtime->data_stacks[stack_adress], i, data);
+    }
+}
+
+inline void function_loads(runtime_T* runtime, unsigned char num_bytes)
+{
+    u_int32_t memory_adress = function_get_adress_stack(runtime);
+
+    u_int32_t stack_adress = function_get_adress_stack(runtime);
+    if (stack_adress > runtime->data_stacks_ptr)
+    {
+        printf("[Pop] Cannot access data stack: %d\n", stack_adress);
+        exit(1);
+    }
+
+    for (int i = memory_adress; i < num_bytes + memory_adress; i++)
+    {
+        unsigned char data = stack_get_value(runtime->data_stacks[stack_adress], i);
+        stack_push(runtime->function_stack, data);
+    }
+}
+
+inline void function_add(runtime_T* runtime, unsigned char num_bytes)
 {
     u_int64_t a = 0;
     for (int i = 0; i < num_bytes; i++)
@@ -462,7 +546,7 @@ inline void function_add(function_T* function, runtime_T* runtime, unsigned char
     }
 }
 
-inline void function_sub(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+inline void function_sub(runtime_T* runtime, unsigned char num_bytes)
 {
     u_int64_t a = 0;
     for (int i = 0; i < num_bytes; i++)
@@ -483,7 +567,7 @@ inline void function_sub(function_T* function, runtime_T* runtime, unsigned char
     }
 }
 
-inline void function_mult(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+inline void function_mult(runtime_T* runtime, unsigned char num_bytes)
 {
     u_int64_t a = 0;
     for (int i = 0; i < num_bytes; i++)
@@ -504,7 +588,7 @@ inline void function_mult(function_T* function, runtime_T* runtime, unsigned cha
     }
 }
 
-inline void function_div(function_T* function, runtime_T* runtime, unsigned char num_bytes)
+inline void function_div(runtime_T* runtime, unsigned char num_bytes)
 {
     u_int64_t a = 0;
     for (int i = 0; i < num_bytes; i++)
