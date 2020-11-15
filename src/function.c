@@ -391,6 +391,20 @@ void function_run(function_T* function, runtime_T* runtime)
                 function->counter++;
                 break;
             }
+            case PRINTC:
+            {
+                unsigned char c = stack_pop(runtime->function_stack);
+                printf("%c", c);
+                function->counter++;
+                break;
+            }
+            case PRINTI:
+            {
+                u_int32_t i = function_get_adress_stack(runtime);
+                printf("%d", i);
+                function->counter++;
+                break;
+            }
 
             default: { printf("[Error] in %d: Unknown instruction %d at %d\n", function->template->id, function_get_current(function), function->counter); exit(1); }
         }
