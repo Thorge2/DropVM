@@ -25,6 +25,12 @@ enum
     CALL,
     RETURN,
 
+    JUMP,
+    IFE,
+    IFNE,
+    IFGT,
+    IFLT,
+
     PRINT,
     PRINTC,
     PRINTI,

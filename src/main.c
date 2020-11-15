@@ -6,17 +6,41 @@
 
 int main()
 {
-    unsigned char src[100] = {
+    unsigned char src[200] = {
         FUNC,
-        CREATE_DSTACK, // creates a new data stack, default is 0, each added becomes the next index
-        MOVE64, 0,0,0,1, 0,0,0,0, 'H','e','l','l','o',',',' ','w', // moves the bytes for "Hello, w" onto data stack 1 in index 0
-        MOVE64, 0,0,0,1, 0,0,0,8, 'o','r','l','d','!','\n','\0','\0', // moves the bytes for "orld!\n\0\0" onto datastack 1 in index 8
-        PUSH32, 0,0,0,1, //pushes 1 onto the functin stack, this is the index for the datastack
-        PUSH32, 0,0,0,0, //pushes 0 onto the function stack, this is the index from wich will be printed
-        PRINT, // now prints "Hello, world!\n"
-        PUSH, 0, // pushes 0 onto the function stack, because when main ends it returns the top of the function stack
-        END 
+
+        // setup memory
+        MOVE64, 0,0,0,0, 0,0,0,0, 'H','e','l','l','o',',',' ','w',
+        MOVE64, 0,0,0,0, 0,0,0,8, 'o','r','l','d','!','\n','\0','\0',
+        CREATE_DSTACK,
+        MOVE, 0,0,0,1, 0,0,0,0, 0,
+
+        CALL, 0,0,0,1,
+        PUSH, 0,
+
+        END,
+
+        FUNC,
+
+        LOAD, 0,0,0,1, 0,0,0,0,
+        PUSH, 1,
+        ADD,
+        POP, 0,0,0,1, 0,0,0,0,
+
+        PUSH32, 0,0,0,0,
+        PUSH32, 0,0,0,0,
+        PRINT,
+
+        PUSH16, 0,0,
+        PUSH, 0,
+        LOAD, 0,0,0,1, 0,0,0,0,
+        PUSH32, 0,0,0,10,
+        IFLT, 0,0,0,0,
+
+        END,
     };
+
+    write_file("./bin.dvm", src, sizeof(src));
 
     parser_T* parser = init_parser(src, sizeof(src));
     runtime_T* runtime = parser_parse(parser);

@@ -260,19 +260,76 @@ void function_run(function_T* function, runtime_T* runtime)
                 function->counter++;
                 break;
             }
+            case JUMP:
+            {
+                u_int32_t adress = function_get_adress(function);
+                function->counter = adress;
+                break;
+            }
+            case IFE:
+            {
+                u_int32_t a = function_get_adress_stack(function, runtime);
+                u_int32_t b = function_get_adress_stack(function, runtime);
+
+                u_int32_t adress = function_get_adress(function);
+
+                if (a == b)
+                {
+                    function->counter = adress;
+                    break;
+                }
+                function->counter++;
+                break;
+            }
+            case IFNE:
+            {
+                u_int32_t a = function_get_adress_stack(function, runtime);
+                u_int32_t b = function_get_adress_stack(function, runtime);
+
+                u_int32_t adress = function_get_adress(function);
+
+                if (a != b)
+                {
+                    function->counter = adress;
+                    break;
+                }
+                function->counter++;
+                break;
+            }
+            case IFGT:
+            {
+                u_int32_t a = function_get_adress_stack(function, runtime);
+                u_int32_t b = function_get_adress_stack(function, runtime);
+
+                u_int32_t adress = function_get_adress(function);
+
+                if (a < b)
+                {
+                    function->counter = adress;
+                    break;
+                }
+                function->counter++;
+                break;
+            }
+            case IFLT:
+            {
+                u_int32_t a = function_get_adress_stack(function, runtime);
+                u_int32_t b = function_get_adress_stack(function, runtime);
+
+                u_int32_t adress = function_get_adress(function);
+
+                if (a > b)
+                {
+                    function->counter = adress;
+                    break;
+                }
+                function->counter++;
+                break;
+            }
             case PRINT:
             {
-                u_int32_t memory_adress = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    memory_adress |= stack_pop(runtime->function_stack) << i * 8;
-                }
-
-                u_int32_t stack_adress = 0;
-                for (int i = 0; i < 4; i++)
-                {
-                    stack_adress |= stack_pop(runtime->function_stack) << i * 8;
-                }
+                u_int32_t memory_adress = function_get_adress_stack(function, runtime);
+                u_int32_t stack_adress = function_get_adress_stack(function, runtime);
                 if (stack_adress > runtime->data_stacks_ptr)
                 {
                     printf("[Print] Cannot access data stack: %d\n", stack_adress);
@@ -308,6 +365,16 @@ u_int32_t function_get_adress(function_T* function)
     adress |= function_get_current(function) << 8;
     function->counter++;
     adress |= function_get_current(function);
+    return adress;
+}
+
+u_int32_t function_get_adress_stack(function_T* function, runtime_T* runtime)
+{
+    u_int32_t adress = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        adress |= stack_pop(runtime->function_stack) << i * 8;
+    }
     return adress;
 }
 
