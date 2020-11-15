@@ -124,6 +124,31 @@ void function_run(function_T* function, runtime_T* runtime)
                 function->counter++;
                 break;
             }
+            case CREATE_DSTACK:
+            {
+                runtime->data_stacks_ptr += 1;
+                runtime->data_stacks = realloc(runtime->data_stacks, runtime->data_stacks_ptr * sizeof(struct STACK_STRUCT*));
+                runtime->data_stacks[runtime->data_stacks_ptr] = init_stack(1024);
+                function->counter++;
+                break;
+            }
+            case DELETE_DSTACK:
+            {
+                u_int32_t adress = function_get_adress(function);
+                if (adress > runtime->data_stacks_ptr || adress <= 0)
+                {
+                    printf("[Data stack delete] Cannot delete datastack: %d\n", adress);
+                    exit(1);
+                }
+                free(runtime->data_stacks[adress]);
+                if (adress == runtime->data_stacks_ptr)
+                {
+                    runtime->data_stacks_ptr -= 1;
+                    runtime->data_stacks = realloc(runtime->data_stacks, runtime->data_stacks_ptr * sizeof(struct STACK_STRUCT*));
+                }
+                function->counter++;
+                break;
+            }
             case ADD:
             {
                 function_add(function, runtime, 1);
@@ -222,21 +247,42 @@ void function_run(function_T* function, runtime_T* runtime)
             }
             case CALL:
             {
-                function->counter++;
-                if (function_get_current(function) < 0 || function_get_current(function) >= runtime->template_count)
+                u_int32_t adress = function_get_adress(function);
+                if (adress < 0 || adress >= runtime->template_count)
                 {
-                    printf("[Error] in %d: Function %d is not defined\n", function->template->id, function_get_current(function));
+                    printf("[Error] in %d: Function %d is not defined\n", function->template->id, adress);
                     exit(1);
                 }
-                function_T* func = init_function(runtime->templates[function_get_current(function)]);
-
-                u_int32_t stack_frame = runtime->data_stack->base_ptr;
-                stack_set_frame(runtime->data_stack, runtime->data_stack->base_ptr + 1);
+                function_T* func = init_function(runtime->templates[adress]);
 
                 function_run(func, runtime);
 
-                stack_set_frame(runtime->data_stack, stack_frame);
+                function->counter++;
+                break;
+            }
+            case PRINT:
+            {
+                u_int32_t memory_adress = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    memory_adress |= stack_pop(runtime->function_stack) << i * 8;
+                }
 
+                u_int32_t stack_adress = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    stack_adress |= stack_pop(runtime->function_stack) << i * 8;
+                }
+                if (stack_adress > runtime->data_stacks_ptr)
+                {
+                    printf("[Print] Cannot access data stack: %d\n", stack_adress);
+                    exit(1);
+                }
+
+                for (u_int32_t i = memory_adress; stack_get_value(runtime->data_stacks[stack_adress], i) != 0; i++)
+                {
+                    printf("%c", stack_get_value(runtime->data_stacks[stack_adress], i));
+                }
                 function->counter++;
                 break;
             }
@@ -276,34 +322,55 @@ inline void function_push(function_T* function, runtime_T* runtime, unsigned cha
 
 inline void function_pop(function_T* function, runtime_T* runtime, unsigned char num_bytes)
 {
-    u_int32_t adress = function_get_adress(function);
+    u_int32_t stack_adress = function_get_adress(function);
+    if (stack_adress > runtime->data_stacks_ptr)
+    {
+        printf("[Pop] Cannot access data stack: %d\n", stack_adress);
+        exit(1);
+    }
 
-    for (int i = adress; i < num_bytes + adress; i++)
+    u_int32_t memory_adress = function_get_adress(function);
+
+    for (int i = memory_adress; i < num_bytes + memory_adress; i++)
     {
         unsigned char data = stack_pop(runtime->function_stack);
-        stack_set_value(runtime->data_stack, i, data);
+        stack_set_value(runtime->data_stacks[stack_adress], i, data);
     }
 }
 
 inline void function_load(function_T* function, runtime_T* runtime, unsigned char num_bytes)
 {
-    u_int32_t adress = function_get_adress(function);
-
-    for (int i = adress; i < num_bytes + adress; i++)
+    u_int32_t stack_adress = function_get_adress(function);
+    if (stack_adress > runtime->data_stacks_ptr)
     {
-        unsigned char data = stack_get_value(runtime->data_stack, i);
+        printf("[Pop] Cannot access data stack: %d\n", stack_adress);
+        exit(1);
+    }
+
+    u_int32_t memory_adress = function_get_adress(function);
+
+    for (int i = memory_adress; i < num_bytes + memory_adress; i++)
+    {
+        unsigned char data = stack_get_value(runtime->data_stacks[stack_adress], i);
         stack_push(runtime->function_stack, data);
     }
 }
 
-inline void function_move(function_T* funtion, runtime_T* runtime, unsigned char num_bytes)
+inline void function_move(function_T* function, runtime_T* runtime, unsigned char num_bytes)
 {
-    u_int32_t adress = function_get_adress(funtion);
-
-    for (int i = adress; i < num_bytes + adress; i++)
+    u_int32_t stack_adress = function_get_adress(function);
+    if (stack_adress > runtime->data_stacks_ptr)
     {
-        funtion->counter++;
-        stack_set_value(runtime->data_stack, i, function_get_current(funtion));
+        printf("[Pop] Cannot access data stack: %d\n", stack_adress);
+        exit(1);
+    }
+
+    u_int32_t memory_adress = function_get_adress(function);
+
+    for (int i = memory_adress; i < num_bytes + memory_adress; i++)
+    {
+        function->counter++;
+        stack_set_value(runtime->data_stacks[stack_adress], i, function_get_current(function));
     }
 }
 

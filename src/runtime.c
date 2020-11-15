@@ -10,7 +10,9 @@ runtime_T* init_runtime()
     runtime->running = false;
 
     runtime->function_stack = init_stack(1024);
-    runtime->data_stack = init_stack(1024);
+    runtime->data_stacks = calloc(1, sizeof(struct STACK_STRUCT*));
+    runtime->data_stacks_ptr = 0;
+    runtime->data_stacks[0] = init_stack(1024);
 
     return runtime;
 }

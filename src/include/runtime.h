@@ -13,7 +13,8 @@ typedef struct RUNTIME_STRUCT
     bool running;
 
     stack_T* function_stack;
-    stack_T* data_stack;
+    stack_T** data_stacks;
+    u_int32_t data_stacks_ptr;
 } runtime_T;
 
 runtime_T* init_runtime();
